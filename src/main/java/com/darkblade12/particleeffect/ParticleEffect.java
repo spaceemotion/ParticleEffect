@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -1526,13 +1527,12 @@ public enum ParticleEffect {
 			if (range < 1) {
 				throw new IllegalArgumentException("The range is lower than 1");
 			}
-			String worldName = center.getWorld().getName();
+
 			double squared = range * range;
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (!player.getWorld().getName().equals(worldName) || player.getLocation().distanceSquared(center) > squared) {
-					continue;
+			for (Player player : center.getWorld().getPlayers()) {
+				if (player.getLocation().distanceSquared(center) <= squared) {
+					sendTo(center, player);
 				}
-				sendTo(center, player);
 			}
 		}
 
